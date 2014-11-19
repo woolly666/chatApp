@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block the_body %}
+
+<form action="{{the_save_url}}" method="POST">
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li> {{ message }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <p>Enter your 16 digit key:<input name="TEXT"></textbox></p>
+    <p>Choose recipient: <input type="TEXT" name="receive_name">
+    <p>Sender name: <input type="TEXT" name="send_name" value="Lee"></p>
+    </p>
+    <textarea rows="10" cols="60" name="the_comment"></textarea>
+    <p>
+    <input type="SUBMIT" value="Leave Comment">
+    </p>
+</form>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block the_body %}
+
+<form action="{{login_url}}" method="POST">
+    <p>Username:
+    <input type="TEXT" name="user_name">
+    </p>
+    <p>Password:
+    <input type="PASSWORD" name="password">
+    </p>
+    <p>
+    <input type="SUBMIT" value="Login">
+    <a href={{register_link}}>Register</a>
+    </p>
+</form>
+{% endblock %}

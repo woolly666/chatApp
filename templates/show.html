@@ -1,0 +1,14 @@
+<p>Enter your 16 digit key:<input name="TEXT"></textbox></p>
+{% extends "base.html" %}
+{% block the_body %}
+{% for line in the_data %}
+
+<p>
+{{ line }}
+</p>
+
+{% endfor %}
+
+<a href={{home_link}}>Reply</a>
+
+{% endblock %}
