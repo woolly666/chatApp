@@ -6,8 +6,6 @@ Please select from this list of options:
 
 <ul>
     <li><a href="{{login_url}}">Login</a>
-    <li><a href="{{register_url}}">Register</a>
     <li>Leave a <a href="{{comment_url}}">comment</a>
-    <li>Show all <a href="{{show_url}}">Comments Received</a>
 </ul>
 {% endblock %}

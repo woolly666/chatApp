@@ -2,7 +2,6 @@
 {% block the_body %}
 
 <form action="{{the_save_url}}" method="POST">
-
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul>
@@ -13,13 +12,14 @@
         {% endif %}
     {% endwith %}
 
-    <p>Enter your 16 digit key:<input name="TEXT"></textbox></p>
-    <p>Choose recipient: <input type="TEXT" name="user_name">
-    <p>Sender name: <input type="TEXT" name="user_name" value="Lee"></p>
+    <p>Enter your 16 alphanumeric key:<input name="TEXT"></textbox></p>
+    <p>Choose recipient: <input type="TEXT" name="receive_name">
+    <p>Sender name: <input type="TEXT" name="send_name"></p>
     </p>
     <textarea rows="10" cols="60" name="the_comment"></textarea>
     <p>
     <input type="SUBMIT" value="Leave Comment">
+    <a href={{show_link}}>Home</a>
     </p>
 </form>
 

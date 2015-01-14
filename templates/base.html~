@@ -1,8 +1,9 @@
 <html>
     <head>
+        <meta http-equiv="refresh" content="10">
         <title>{{the_title}}</title>
 
-       <!-- <link rel="stylesheet" href="/static/hello.css"> --> 
+     <link rel="stylesheet" href="/static/stylesheet.css">
 
     </head>
 

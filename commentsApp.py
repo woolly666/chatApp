@@ -1,6 +1,12 @@
 from flask import Flask, render_template, url_for, request, redirect, flash, session
-#this is james comment
+import subprocess
+import tempfile
+import os
+
 app=Flask(__name__)
+
+sender = ""
+receiver = ""
 
 @app.route('/')
 def display_home():
@@ -14,7 +20,8 @@ def display_home():
 def getcomment():
     return render_template("enter.html",
                             the_title="Send Message",
-                            the_save_url=url_for("saveformdata"))
+                            the_save_url=url_for("saveformdata"),
+                            show_link=url_for("showallcomments"))
 
 @app.route('/login')
 def getLogin(): # display login page
@@ -44,22 +51,25 @@ def saveformdata():
         flash("Sorry you must enter a comment. Try again")
     
     if all_ok:
-        with open('comments.log','a') as log:
-            print(request.form['user_name'], 'said', file=log)
+        with open(request.form['send_name'] + request.form['receive_name'] + ".txt",'a') as log:
+            print(request.form['send_name'], 'said', file=log)
             print(request.form['the_comment'], file=log)
-        return redirect(url_for("display_home"))
+            session['sender'] = request.form['send_name']
+            session['receiver'] = request.form['receive_name']
+        return redirect(url_for("getcomment"))
 
     else:
         return redirect(url_for("getcomment"))
 
+
 @app.route('/displaycomment')
 def showallcomments():
-    with open('comments.log') as log:
+    with open(session['sender'] + session['receiver'] + ".txt") as log:
         lines = log.readlines()
     return render_template("show.html",
                             the_title="Chat Window",
                             the_data=lines,
-                            home_link=url_for("display_home"))
+                            comment_url=url_for("getcomment"))
 
 app.config['SECRET_KEY'] = 'thisismysecretkeyyouarescrewedmehhehehe' # encrypts/decrypts the session
 app.run(debug=True)
