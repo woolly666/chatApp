@@ -38,7 +38,7 @@ def set_keys():
 
 def get_e(mod):
     """Finds an e coprime with m."""
-    e = random.randint(1, mod)
+    e = 17
     
     while gcd(e, mod) != 1:
         e += 1
@@ -75,6 +75,7 @@ def encrypt(n, e):
 
 def decrypt(d, n):
     """This function asks for a number and decodes it using 'd' and 'n'."""
+
     if not encryptedList:
         return
     else:
