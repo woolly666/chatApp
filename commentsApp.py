@@ -41,6 +41,83 @@ def getRegister(): # display register page
     return render_template("register.html",
                             the_title="Register for an account")
 
+
+@app.route('/email checker', methods = ["POST"])
+def emailExist():
+    emailList = []
+    exists=False
+    
+    session['firstName'] = request.form["FirstName"]
+    session['lastName'] = request.form["LastName"]
+    session['userEmail'] = str(request.form["userEmail"])
+    session['pass'] = str(request.form["password"])
+    session['phone'] = str(request.form["phone"])
+
+    #connection = mariadb.connect(host="localhost",
+    #                             user="root",
+    #                             password="Jamesh92",
+    #                             database="TakeMeThere")
+
+    #getEmail = """SELECT email FROM users""" 
+    
+   # cursor = connection.cursor()
+    
+    #cursor.execute(getEmail)
+   # emailList =cursor.fetchall()
+    
+    #connection.commit()
+   # connection.close()
+
+    
+
+    for item in emailList:
+        print("IN FUNCTION")
+        
+        if checkEmail == item[0]:
+            
+            print("IN IF")
+            exists = True
+
+    ################ THANK YOU FOR REGISTERING PAGE ######################################################################################################################
+
+    if exists == False:
+        print("*********************** FALSE *****************************")
+        print("THANKS PAGE ",session.get('firstName'))
+
+       # connection = mariadb.connect(host="localhost",
+        #                         user="root",
+         #                        password="Jamesh92",
+          #                       database="TakeMeThere")
+    
+        #cursor = connection.cursor()
+    
+        #cursor.execute(registeringData, (session.get('firstName'),session.get('lastName'),session.get('userEmail'),session.get('pass'),session.get('phone'),))
+        #cursor.execute(registerLoc)
+    
+        #connection.commit()
+        #connection.close()
+
+        return render_template("thanks.html",
+                           the_title = "Thank You For Registering!", )
+
+################ EMAIL EXISTS ######################################################################################################################
+
+    else:
+        print("========================= TRUE ===============================")
+       # flash("Sorry This Email Address Already Exists!!!!")
+        return render_template("registerFail.html",
+                               the_title = "Welcome to the Registration Page!", )
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/saveform', methods=["POST"])
 def saveformdata():
     all_ok = True
