@@ -21,11 +21,19 @@ def display_home():
                             the_title="Welcome to the Commenting System.",
                             login_url=url_for("getLogin"),
                             comment_url=url_for("getcomment"),
+                            comment_url2=url_for("getcomment2"),
                             show_url=url_for("showallcomments"))
 
 @app.route('/entercomment')
 def getcomment():
     return render_template("enter.html",
+                            the_title="Send Message",
+                            the_save_url=url_for("saveformdata"),
+                            show_link=url_for("showallcomments"))
+
+@app.route('/entercomment2')
+def getcomment2():
+    return render_template("enter2.html",
                             the_title="Send Message",
                             the_save_url=url_for("saveformdata"),
                             show_link=url_for("showallcomments"))
@@ -114,10 +122,6 @@ def emailExist():
 ######################################################################################################################
 
 
-
-
-
-
 @app.route('/saveform', methods=["POST"])
 def saveformdata():
     all_ok = True
@@ -139,6 +143,7 @@ def saveformdata():
 
         encrypt(request.form['the_comment'],session['n'], session['e'])
         pickle.dump(encryptDecryptList, open(request.form['send_name'] + request.form['receive_name'] + ".txt","wb"))
+        print(encryptDecryptList)
 
         return redirect(url_for("getcomment"))
     else:
@@ -150,6 +155,7 @@ def showallcomments():
     decryptList.clear()
     try:
         session['encryptDecryptList'] = pickle.load(open(request.form['send_name'] + request.form['receive_name'] + ".txt","rb"))
+        print(encryptDecryptList)
 
     except Exception:
         pass
@@ -216,7 +222,6 @@ def encrypt(mess,n, e):
 def decrypt(d, n):
     """This function asks for a number and decodes it using 'd' and 'n'."""
     if not encryptDecryptList:
-        print("hello")
         return
 
     else:
