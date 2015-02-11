@@ -9,6 +9,7 @@ app=Flask(__name__)
 
 sender = ""
 receiver = ""
+key = ""
 encryptDecryptList = []
 decryptList = []
 n = 0
@@ -16,7 +17,7 @@ e = 0
 d = 0
 
 @app.route('/')
-def display_home():
+def display_home(): # home page
     return render_template("home.html",
                             the_title="Welcome to the Commenting System.",
                             login_url=url_for("getLogin"),
@@ -25,18 +26,18 @@ def display_home():
                             show_url=url_for("showallcomments"))
 
 @app.route('/entercomment')
-def getcomment():
+def getcomment():# enter rsa
     return render_template("enter.html",
                             the_title="Send Message",
                             the_save_url=url_for("saveformdata"),
                             show_link=url_for("showallcomments"))
 
 @app.route('/entercomment2')
-def getcomment2():
+def getcomment2():# enter private key
     return render_template("enter2.html",
                             the_title="Send Message",
-                            the_save_url=url_for("saveformdata"),
-                            show_link=url_for("showallcomments"))
+                            the_save_url=url_for("saveformdata2"),
+                            show_link2=url_for("showallcomments2"))
 
 @app.route('/login')
 def getLogin(): # display login page
@@ -123,7 +124,7 @@ def emailExist():
 
 
 @app.route('/saveform', methods=["POST"])
-def saveformdata():
+def saveformdata(): # save for rsa
     all_ok = True
     if request.form['send_name'] == '':
         all_ok = False
@@ -138,20 +139,45 @@ def saveformdata():
         flash("Sorry you must enter a comment. Try again")
     
     if all_ok:
-        set_keys(int(request.form['P']),int(request.form['Q']))
-        encryptDecryptList.clear()
+        set_keys(int(request.form['P']),int(request.form['Q']))#set key
+        encryptDecryptList.clear()# clear list
 
-        encrypt(request.form['the_comment'],session['n'], session['e'])
-        pickle.dump(encryptDecryptList, open(request.form['send_name'] + request.form['receive_name'] + ".txt","wb"))
-        print(encryptDecryptList)
+        encrypt(request.form['the_comment'],session['n'], session['e'])# encrypt message
+        pickle.dump(encryptDecryptList, open(request.form['send_name'] + request.form['receive_name'] + ".txt","wb"))# put in file
 
         return redirect(url_for("getcomment"))
     else:
         return redirect(url_for("getcomment"))
 
+@app.route('/saveform2', methods=["POST"])
+def saveformdata2(): # save for private key
+    all_ok = True
+    if request.form['send_name'] == '':
+        all_ok = False
+        flash("Sorry you must tell me your name. Try again")
+    
+    if request.form['receive_name'] == '':
+        all_ok = False
+        flash("Sorry you must tell me your name. Try again")
+    
+    if request.form['the_comment'] == '':
+        all_ok = False
+        flash("Sorry you must enter a comment. Try again")
+    
+    if all_ok:
+        session['key'] = request.form['the_key'] # set key
+        encryptDecryptList.clear() # clear list
+
+        encrypt2(request.form['the_comment'],session['key']) # encrypt message
+        pickle.dump(encryptDecryptList, open(request.form['send_name'] + request.form['receive_name'] + ".txt","wb")) # put in file
+
+        return redirect(url_for("getcomment2"))
+    else:
+        return redirect(url_for("getcomment2"))
+
 
 @app.route('/displaycomment')
-def showallcomments():
+def showallcomments(): # show for rsa
     decryptList.clear()
     try:
         session['encryptDecryptList'] = pickle.load(open(request.form['send_name'] + request.form['receive_name'] + ".txt","rb"))
@@ -160,14 +186,31 @@ def showallcomments():
     except Exception:
         pass
 
-    decrypt(session['d'], session['n'])
+    decrypt(session['d'], session['n']) # decrypt file
 
     return render_template("show.html",
                             the_title="Here are the current scores",
                             the_data=decryptList,
                             comment_url=url_for("getcomment"))
 
-def set_keys(p,q):
+@app.route('/displaycomment2')
+def showallcomments2(): # show for private key
+    decryptList.clear()
+    try:
+        session['encryptDecryptList'] = pickle.load(open(request.form['send_name'] + request.form['receive_name'] + ".txt","rb"))
+        print(encryptDecryptList)
+
+    except Exception:
+        pass
+
+    decrypt2(session['key'])# decrypt file
+
+    return render_template("show2.html",
+                            the_title="Here are the current scores",
+                            the_data=decryptList,
+                            comment_url=url_for("getcomment2"))
+
+def set_keys(p,q): # set rsa keys
     """This fuction asks for 2 primes. 
     It sets a public key and an encoding number, 'e'."""
     print("\n\nmust be 11 or greater p and q cannot be the same.")
@@ -183,7 +226,7 @@ def set_keys(p,q):
     session['e'] = e
     return [n, e, d]
 
-def get_e(mod):
+def get_e(mod): # get e for rsa
     """Finds an e coprime with m."""
     tf = True
     e = random.randint(1, mod)
@@ -192,13 +235,13 @@ def get_e(mod):
         e += 1
     return e
 
-def gcd(a,b):
+def gcd(a,b): # get gcd for rsa
     """Takes two integers and returns gcd."""
     while b > 0:
         a, b = b, a % b
     return a
 
-def get_d(e, m):
+def get_d(e, m):# get d for rsa
     """Takes encoding number, 'e' and the value for 'mod' (p-1) * (q-1).
     Returns a decoding number."""
     x = lasty = 0 
@@ -210,8 +253,8 @@ def get_d(e, m):
         y, lasty = lasty - q*y, y
     return lastx
 
-def encrypt(mess,n, e):
-    """This function asks for a message and encodes it using 'n' and 'e'."""
+def encrypt(mess,n, e): #rsa encryption
+    """This function asks for a message and encodes it using 'n' and 'e'."""    
     r = [ord(c) for c in mess]
 
     for i in r:
@@ -219,7 +262,21 @@ def encrypt(mess,n, e):
     if not mess:
         return
 
-def decrypt(d, n):
+def encrypt2(mess, k): # private key encryption
+    characters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    count = 0
+    r = [ord(c) for c in mess]
+
+    for i in r:
+        encryptDecryptList.append(i + letters.index(k[count]))
+        count = count + 1
+        if count == len(k):
+           count = 0
+    if not mess:
+        return
+
+
+def decrypt(d, n): # rsa decryption
     """This function asks for a number and decodes it using 'd' and 'n'."""
     if not encryptDecryptList:
         return
@@ -227,6 +284,21 @@ def decrypt(d, n):
     else:
         for i in encryptDecryptList:
             r = pow(i, d, n)
+            decryptList.append(chr(r))
+
+def decrypt2(k): # private decryption
+    characters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    count = 0
+
+    if not encryptDecryptList:
+        return
+
+    else:
+        for i in encryptDecryptList:
+            r = (i-letters.index(k[count]))
+            count = count + 1
+            if count == len(k):
+               count = 0
             decryptList.append(chr(r))
 
 app.config['SECRET_KEY'] = 'thisismysecretkeyyouarescrewedmehhehehe' # encrypts/decrypts the session
