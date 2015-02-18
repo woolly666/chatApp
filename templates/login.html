@@ -2,11 +2,11 @@
 {% block the_body %}
 
 <form action="{{login_url}}" method="POST">
-    <p>Username:
-    <input type="TEXT" name="user_name">
+    <p>Email:
+    <input type="TEXT" name="user_name" required>
     </p>
     <p>Password:
-    <input type="PASSWORD" name="password">
+    <input type="PASSWORD" name="password" required>
     </p>
     <p>
     <input type="SUBMIT" value="Login">
