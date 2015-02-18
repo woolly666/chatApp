@@ -52,7 +52,7 @@ def getRegister(): # display register page
     return render_template("register.html",
                            the_title="Register for an account",
                            register_url = url_for("emailExist"),
-                           login_link = url_for("getLogin"))
+                           login_url = url_for("getLogin"))
 
 
 @app.route('/emailChecker', methods = ["POST"])

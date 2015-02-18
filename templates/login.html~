@@ -10,9 +10,7 @@
     </p>
     <p>
     <input type="SUBMIT" value="Login">
-    <form action="{{register_url}}" method="POST">
-        <input type="BUTTON" value="Register">
-    </form>
+    <a href={{register_link}}>Register</a>
     </p>
 </form>
 {% endblock %}
