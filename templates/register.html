@@ -3,13 +3,13 @@
 
 <form action="{{register_url}}" method="POST">
     <p>First Name:
-    <input type="TEXT" name="firstName">
+    <input type="TEXT" name="firstName" required>
     </p>
     <p>Surname:
-    <input type="TEXT" name="surname">
+    <input type="TEXT" name="surname"required>
     </p>
     <p>Date of birth:
-    <input type="DATE" name="age">
+    <input type="DATE" name="age"required>
     </p>
     <p>Gender:
     <select>
@@ -18,16 +18,16 @@
     </select>
     </p>
     <p>E-mail Address:
-    <input type="EMAIL" name="emailAddress">
+    <input type="EMAIL" name="emailAddress"required>
     </p>
     <p>Confirm E-mail Address:
-    <input type="EMAIL" name="emailAddress">
+    <input type="EMAIL" name="emailAddress"required>
     </p>
     <p>Password:
-    <input type="PASSWORD" name="password">
+    <input type="PASSWORD" name="password"required>
     </p>
     <p>Confirm Pasword:
-    <input type="PASSWORD" name="cPassword">
+    <input type="PASSWORD" name="cPassword"required>
     </p>
     <p>
     <input type="SUBMIT" value="Register">
