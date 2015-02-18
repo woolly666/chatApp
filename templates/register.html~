@@ -12,7 +12,10 @@
     <input type="DATE" name="age">
     </p>
     <p>Gender:
-    <input type="TEXT" name="gender">
+    <select>
+       <option value="man">Male</option>
+       <option value="woman">Female</option>
+    </select>
     </p>
     <p>E-mail Address:
     <input type="EMAIL" name="emailAddress">
