@@ -4,7 +4,7 @@ import math, random
 import subprocess
 import tempfile
 import os
-
+import mysql.connector as mariadb
 app=Flask(__name__)
 
 sender = ""
@@ -50,34 +50,36 @@ def getLogin(): # display login page
 @app.route('/register')
 def getRegister(): # display register page
     return render_template("register.html",
-                            the_title="Register for an account")
+                           the_title="Register for an account",
+                           register_url = url_for("emailExist"))
 
 
-@app.route('/email checker', methods = ["POST"])
+@app.route('/emailChecker', methods = ["POST"])
 def emailExist():
     emailList = []
     exists=False
     
-    session['firstName'] = request.form["FirstName"]
-    session['lastName'] = request.form["LastName"]
-    session['userEmail'] = str(request.form["userEmail"])
-    session['pass'] = str(request.form["password"])
-    session['phone'] = str(request.form["phone"])
+    #session['firstName'] = request.form["FirstName"]
+    #session['lastName'] = request.form["LastName"]
+    #session['userEmail'] = str(request.form["userEmail"])
+    #session['pass'] = str(request.form["password"])
+    #session['phone'] = str(request.form["phone"])
+    checkEmail = request.form['emailAddress']
+    
+    connection = mariadb.connect(host="localhost",
+                                 user="root",
+                                 password="Jamesh92",
+                                 database="chatApp")
 
-    #connection = mariadb.connect(host="localhost",
-    #                             user="root",
-    #                             password="Jamesh92",
-    #                             database="TakeMeThere")
-
-    #getEmail = """SELECT email FROM users""" 
+    getEmail = """SELECT userEmail FROM chatusers""" 
     
-   # cursor = connection.cursor()
+    cursor = connection.cursor()
     
-    #cursor.execute(getEmail)
-   # emailList =cursor.fetchall()
+    cursor.execute(getEmail)
+    emailList =cursor.fetchall()
     
-    #connection.commit()
-   # connection.close()
+    connection.commit()
+    connection.close()
 
     
 
@@ -95,21 +97,25 @@ def emailExist():
         print("*********************** FALSE *****************************")
         print("THANKS PAGE ",session.get('firstName'))
 
-       # connection = mariadb.connect(host="localhost",
-        #                         user="root",
-         #                        password="Jamesh92",
-          #                       database="TakeMeThere")
+        registeringData = """INSERT INTO chatusers (firstName, lastName, DOB, gender, userEmail, userPass) VALUES(%s, %s, %s, %s, %s, %s)""" #puts the new registered users into the database
+
+
+        connection = mariadb.connect(host="localhost",
+                                     user="root",
+                                     password="Jamesh92",
+                                     database="chatApp")
     
-        #cursor = connection.cursor()
+        cursor = connection.cursor()
     
-        #cursor.execute(registeringData, (session.get('firstName'),session.get('lastName'),session.get('userEmail'),session.get('pass'),session.get('phone'),))
-        #cursor.execute(registerLoc)
+        cursor.execute(registeringData, (request.form['firstName'],request.form['surname'],request.form['age'],request.form['gender'],request.form['emailAddress'],request.form['password'],))
+      
     
-        #connection.commit()
-        #connection.close()
+        connection.commit()
+        connection.close()
 
         return render_template("thanks.html",
-                           the_title = "Thank You For Registering!", )
+                               the_title = "Thank You For Registering!",
+                               home_link = url_for("display_home"))
 
 ################ EMAIL EXISTS ######################################################################################################################
 

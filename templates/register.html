@@ -1,6 +1,5 @@
 {% extends "base.html" %}
  {% block the_body %} 
-<form action="{{register_url}}" method="POST">
 
 <p>
 Please enter in your details to register. 
@@ -8,42 +7,31 @@ Please enter in your details to register.
 
 <form action="{{register_url}}" method="POST" onSubmit=" return (emailChecker(this)&& passwordChecker(this))">
      <p>First Name:
-    <input type="TEXT" name="firstName">
     <input type="TEXT" name="firstName" required>
      </p>
      <p>Surname:
-    <input type="TEXT" name="surname">
     <input type="TEXT" name="surname" required>
      </p>
      <p>Date of birth:
-    <input type="DATE" name="age">
     <input type="DATE" name="age" required>
      </p>
      <p>Gender:
-    <select>
-       <option value="man">Male</option>
-       <option value="woman">Female</option>
-    </select>
-    <select required>
+    <select name="gender" required>
 		<option selected disabled hidden value=''></option>
 		<option value="man">Male</option>
 		<option value="woman">Female</option>
     </select >
      </p>
      <p>E-mail Address:
-    <input type="EMAIL" name="emailAddress">
     <input type="EMAIL" name="emailAddress" required>
      </p>
      <p>Confirm E-mail Address:
-    <input type="EMAIL" name="emailAddress">
     <input type="EMAIL" name="cEmailAddress" required>
      </p>
     <p>Password:
-    <input type="PASSWORD" name="password">
     <input type="PASSWORD" name="password" required>
      </p>
-     <p>Confirm Pasword:
-    <input type="PASSWORD" name="cPassword">
+     <p>Confirm Password:
     <input type="PASSWORD" name="cPassword" required>
      </p>
      <p>
