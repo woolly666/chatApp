@@ -19,7 +19,7 @@ d = 0
 @app.route('/home')
 def display_home(): # home page
     return render_template("home.html",
-                            the_title="Welcome to the Commenting System.",
+                            the_title="Welcome to the Chat System.",
                             login_url=url_for("getLogin"),
                             comment_url=url_for("getcomment"),
                             comment_url2=url_for("getcomment2"),
