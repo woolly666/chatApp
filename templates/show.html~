@@ -2,7 +2,7 @@
 {% block the_body %}
 {% for line in the_data %}
 
-<td>{{ line }}</td>
+<td><font color="white">{{ line }}</font></td>
 
 {% endfor %}
 

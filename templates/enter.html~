@@ -12,14 +12,14 @@
         {% endif %}
     {% endwith %}
 
-    <p>must be 11 or greater p and q cannot be the same.</p>
     <p>P:<input type="text" name="P" required> Q:<input type="text" name="Q" required></textbox></p>
     <p>File name: <input type="TEXT" name="store_name">
     </p>
     <textarea rows="10" cols="60" name="the_comment"></textarea>
     <p>
     <input type="SUBMIT" value="Leave Comment">
-    <a href={{show_link}}>View chat</a>
+    <a href={{show_link}}><input type="button" value="View Message"/></a>
+    <a href={{home_link}}><input type="button" value="Home"/></a>
     </p>
 </form>
 

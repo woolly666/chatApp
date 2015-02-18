@@ -16,7 +16,7 @@ n = 0
 e = 0
 d = 0
 
-@app.route('/')
+@app.route('/home')
 def display_home(): # home page
     return render_template("home.html",
                             the_title="Welcome to the Commenting System.",
@@ -30,14 +30,16 @@ def getcomment():# enter rsa
     return render_template("enter.html",
                             the_title="Send Message",
                             the_save_url=url_for("saveformdata"),
-                            show_link=url_for("showallcomments"))
+                            show_link=url_for("showallcomments"),
+                            home_link=url_for("display_home"))
 
 @app.route('/entercomment2')
 def getcomment2():# enter private key
     return render_template("enter2.html",
                             the_title="Send Message",
                             the_save_url=url_for("saveformdata2"),
-                            show_link2=url_for("showallcomments2"))
+                            show_link2=url_for("showallcomments2"),
+                            home_link=url_for("display_home"))
 
 @app.route('/login')
 def getLogin(): # display login page
