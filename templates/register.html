@@ -1,74 +1,37 @@
 {% extends "base.html" %}
 {% block the_body %}
 
-
-<p>
-Please enter in your details to register. 
-</p>
-
-<form action="{{register_url}}" method="POST" onSubmit=" return (emailChecker(this)&& passwordChecker(this))">
+<form action="{{register_url}}" method="POST">
     <p>First Name:
-    <input type="TEXT" name="firstName" required>
+    <input type="TEXT" name="firstName">
     </p>
     <p>Surname:
-    <input type="TEXT" name="surname" required>
+    <input type="TEXT" name="surname">
     </p>
     <p>Date of birth:
-    <input type="DATE" name="age" required>
+    <input type="DATE" name="age">
     </p>
     <p>Gender:
-    <select required>
-		<option selected disabled hidden value=''></option>
-		<option value="man">Male</option>
-		<option value="woman">Female</option>
-    </select >
+    <select>
+       <option value="man">Male</option>
+       <option value="woman">Female</option>
+    </select>
     </p>
     <p>E-mail Address:
-    <input type="EMAIL" name="emailAddress" required>
+    <input type="EMAIL" name="emailAddress">
     </p>
     <p>Confirm E-mail Address:
-    <input type="EMAIL" name="cEmailAddress" required>
+    <input type="EMAIL" name="emailAddress">
     </p>
     <p>Password:
-    <input type="PASSWORD" name="password" required>
+    <input type="PASSWORD" name="password">
     </p>
     <p>Confirm Pasword:
-    <input type="PASSWORD" name="cPassword" required>
+    <input type="PASSWORD" name="cPassword">
     </p>
     <p>
     <input type="SUBMIT" value="Register">
     </p>
 </form>
-
-
-
-<script>
-//http://lab.artlung.com/compare-fields/
-function emailChecker(registerForm) {
-    if (registerForm.emailAddress.value != registerForm.cEmailAddress.value)
-    {
-        alert('Make sure both email addresses are the same!!!');
-        return false;
-    } else {
-        return true;
-    }
-}
-</script>
-
-<script>
-//http://lab.artlung.com/compare-fields/
-function passwordChecker(registerForm) {
-    if (registerForm.password.value != registerForm.cPassword.value)
-    {
-        alert('Both Passwords Don\'t Match!!!');
-        return false;
-    } else {
-        return true;
-    }
-}
-
-</script>
-
-
 
 {% endblock %}

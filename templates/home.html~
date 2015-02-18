@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 {% block the_body %}
 
-<p>The last person to leave a comment was: {{the_person}}</p>
 Please select from this list of options:
 
 <ul>
-    <li><a href="{{login_url}}">Login</a>
-    <li>Leave a <a href="{{comment_url}}">comment</a>
+    <li>Leave a <a href="{{comment_url}}">comment (rsa)</a>
+    <li>Leave a <a href="{{comment_url}}">comment (prim key)</a>
 </ul>
 {% endblock %}

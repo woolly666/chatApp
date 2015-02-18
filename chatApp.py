@@ -126,24 +126,36 @@ def emailExist():
 @app.route('/saveform', methods=["POST"])
 def saveformdata(): # save for rsa
     all_ok = True
-    if request.form['send_name'] == '':
+    if request.form['P'] == '':
         all_ok = False
-        flash("Sorry you must tell me your name. Try again")
-    
-    if request.form['receive_name'] == '':
+        flash("P cannot be blank")
+
+    if request.form['Q'] == '':
         all_ok = False
-        flash("Sorry you must tell me your name. Try again")
-    
-    if request.form['the_comment'] == '':
+        flash("Q cannot be blank")
+
+    if request.form['P'] < '11':
         all_ok = False
-        flash("Sorry you must enter a comment. Try again")
+        flash("P must be 11 or greater")
+
+    if request.form['Q'] < '11':
+        all_ok = False
+        flash("Q must be 11 or greater")
+
+    if request.form['P'] == request.form['Q']:
+        all_ok = False
+        flash("P and Q cannot be the same")
+
+    if request.form['store_name'] == '':
+        all_ok = False
+        flash("Sorry you must specify a file name.")
     
     if all_ok:
         set_keys(int(request.form['P']),int(request.form['Q']))#set key
         encryptDecryptList.clear()# clear list
 
         encrypt(request.form['the_comment'],session['n'], session['e'])# encrypt message
-        pickle.dump(encryptDecryptList, open(request.form['send_name'] + request.form['receive_name'] + ".txt","wb"))# put in file
+        pickle.dump(encryptDecryptList,open(request.form['store_name'] + ".txt","wb"))# put in file
 
         return redirect(url_for("getcomment"))
     else:
@@ -152,13 +164,13 @@ def saveformdata(): # save for rsa
 @app.route('/saveform2', methods=["POST"])
 def saveformdata2(): # save for private key
     all_ok = True
-    if request.form['send_name'] == '':
+    if request.form['the_key'] == '':
         all_ok = False
-        flash("Sorry you must tell me your name. Try again")
-    
-    if request.form['receive_name'] == '':
+        flash("Sorry you must specify a key.")
+
+    if request.form['store_name'] == '':
         all_ok = False
-        flash("Sorry you must tell me your name. Try again")
+        flash("Sorry you must specify a file name.")
     
     if request.form['the_comment'] == '':
         all_ok = False
@@ -169,7 +181,7 @@ def saveformdata2(): # save for private key
         encryptDecryptList.clear() # clear list
 
         encrypt2(request.form['the_comment'],session['key']) # encrypt message
-        pickle.dump(encryptDecryptList, open(request.form['send_name'] + request.form['receive_name'] + ".txt","wb")) # put in file
+        pickle.dump(encryptDecryptList,open(request.form['store_name'] + ".txt","wb")) # put in file
 
         return redirect(url_for("getcomment2"))
     else:
@@ -180,8 +192,7 @@ def saveformdata2(): # save for private key
 def showallcomments(): # show for rsa
     decryptList.clear()
     try:
-        session['encryptDecryptList'] = pickle.load(open(request.form['send_name'] + request.form['receive_name'] + ".txt","rb"))
-        print(encryptDecryptList)
+        session['encryptDecryptList'] = pickle.load(open(request.form['store_name'] + ".txt","wb"))
 
     except Exception:
         pass
@@ -197,8 +208,7 @@ def showallcomments(): # show for rsa
 def showallcomments2(): # show for private key
     decryptList.clear()
     try:
-        session['encryptDecryptList'] = pickle.load(open(request.form['send_name'] + request.form['receive_name'] + ".txt","rb"))
-        print(encryptDecryptList)
+        session['encryptDecryptList'] = pickle.load(open(request.form['store_name'] + ".txt","rb"))
 
     except Exception:
         pass
@@ -213,7 +223,6 @@ def showallcomments2(): # show for private key
 def set_keys(p,q): # set rsa keys
     """This fuction asks for 2 primes. 
     It sets a public key and an encoding number, 'e'."""
-    print("\n\nmust be 11 or greater p and q cannot be the same.")
     n = p * q
     mod = (p - 1) * (q - 1)
     e = get_e(mod)

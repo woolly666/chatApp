@@ -1,7 +1,7 @@
 body {
   font-family:      Verdana, Geneva, Arial, sans-serif;
   font-size:        medium;
-  background-color: #FF0000;
+  background-color: #800000;
 }
 a {
   text-decoration:  none; 
@@ -29,6 +29,7 @@ table {
 td, th {
   padding:          5px;
   text-align:       left;
+  color:            #FFFFFF;
 }
 
 textarea{

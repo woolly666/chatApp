@@ -1,14 +1,11 @@
-<p>Enter your 16 alphanumeric key:<input name="TEXT"></textbox></p>
 {% extends "base.html" %}
 {% block the_body %}
 {% for line in the_data %}
 
-<p>
-{{ line }}
-</p>
+<td>{{ line }}</td>
 
 {% endfor %}
-<meta http-equiv="refresh" content="10">
+
 <a href={{comment_url}}>Reply</a>
 
 {% endblock %}

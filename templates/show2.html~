@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block the_body %}
+{% for line in the_data %}
+
+<p>Enter your key:<input type="TEXT" name ="the_key"></textbox></p>
+<input type="BUTTON" value="Decrypt">
+
+
+<td><font color="white">{{ line }}</font></td>
+
+{% endfor %}
+
+<p>Enter your key:<input type="TEXT" name ="the_key"></textbox></p>
+<input type="BUTTON" value="Decrypt">
+
+<a href={{comment_url}}>Reply</a>
+
+{% endblock %}
