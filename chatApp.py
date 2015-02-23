@@ -4,7 +4,7 @@ import math, random
 import subprocess
 import tempfile
 import os
-import mysql.connector as mariadb
+
 app=Flask(__name__)
 
 sender = ""
@@ -19,7 +19,7 @@ d = 0
 @app.route('/home')
 def display_home(): # home page
     return render_template("home.html",
-                            the_title="Welcome to the Chat System.",
+                            the_title="Welcome to the Commenting System.",
                             login_url=url_for("getLogin"),
                             comment_url=url_for("getcomment"),
                             comment_url2=url_for("getcomment2"),
@@ -50,37 +50,34 @@ def getLogin(): # display login page
 @app.route('/register')
 def getRegister(): # display register page
     return render_template("register.html",
-                           the_title="Register for an account",
-                           register_url = url_for("emailExist"),
-                           login_link = url_for("getLogin"))
+                            the_title="Register for an account")
 
 
-@app.route('/emailChecker', methods = ["POST"])
+@app.route('/email checker', methods = ["POST"])
 def emailExist():
     emailList = []
     exists=False
     
-    #session['firstName'] = request.form["FirstName"]
-    #session['lastName'] = request.form["LastName"]
-    #session['userEmail'] = str(request.form["userEmail"])
-    #session['pass'] = str(request.form["password"])
-    #session['phone'] = str(request.form["phone"])
-    checkEmail = request.form['emailAddress']
-    
-    connection = mariadb.connect(host="localhost",
-                                 user="root",
-                                 password="Jamesh92",
-                                 database="chatApp")
+    session['firstName'] = request.form["FirstName"]
+    session['lastName'] = request.form["LastName"]
+    session['userEmail'] = str(request.form["userEmail"])
+    session['pass'] = str(request.form["password"])
+    session['phone'] = str(request.form["phone"])
 
-    getEmail = """SELECT userEmail FROM chatusers""" 
+    #connection = mariadb.connect(host="localhost",
+    #                             user="root",
+    #                             password="Jamesh92",
+    #                             database="TakeMeThere")
+
+    #getEmail = """SELECT email FROM users""" 
     
-    cursor = connection.cursor()
+   # cursor = connection.cursor()
     
-    cursor.execute(getEmail)
-    emailList =cursor.fetchall()
+    #cursor.execute(getEmail)
+   # emailList =cursor.fetchall()
     
-    connection.commit()
-    connection.close()
+    #connection.commit()
+   # connection.close()
 
     
 
@@ -98,25 +95,21 @@ def emailExist():
         print("*********************** FALSE *****************************")
         print("THANKS PAGE ",session.get('firstName'))
 
-        registeringData = """INSERT INTO chatusers (firstName, lastName, DOB, gender, userEmail, userPass) VALUES(%s, %s, %s, %s, %s, %s)""" #puts the new registered users into the database
-
-
-        connection = mariadb.connect(host="localhost",
-                                     user="root",
-                                     password="Jamesh92",
-                                     database="chatApp")
+       # connection = mariadb.connect(host="localhost",
+        #                         user="root",
+         #                        password="Jamesh92",
+          #                       database="TakeMeThere")
     
-        cursor = connection.cursor()
+        #cursor = connection.cursor()
     
-        cursor.execute(registeringData, (request.form['firstName'],request.form['surname'],request.form['age'],request.form['gender'],request.form['emailAddress'],request.form['password'],))
-      
+        #cursor.execute(registeringData, (session.get('firstName'),session.get('lastName'),session.get('userEmail'),session.get('pass'),session.get('phone'),))
+        #cursor.execute(registerLoc)
     
-        connection.commit()
-        connection.close()
+        #connection.commit()
+        #connection.close()
 
         return render_template("thanks.html",
-                               the_title = "Thank You For Registering!",
-                               home_link = url_for("display_home"))
+                           the_title = "Thank You For Registering!", )
 
 ################ EMAIL EXISTS ######################################################################################################################
 
@@ -164,6 +157,7 @@ def saveformdata(): # save for rsa
         encryptDecryptList.clear()# clear list
 
         encrypt(request.form['the_comment'],session['n'], session['e'])# encrypt message
+        print(encryptDecryptList)
         pickle.dump(encryptDecryptList,open(request.form['store_name'] + ".txt","wb"))# put in file
 
         return redirect(url_for("getcomment"))
@@ -236,13 +230,21 @@ def set_keys(p,q): # set rsa keys
     mod = (p - 1) * (q - 1)
     e = get_e(mod)
     d = get_d(e, mod)
+
     while d < 0:
         d += mod
+        
     print("N = ", n,"\nO(",n,")","=",mod,"\ne = ", e, "\nd = ", d)
     session['d'] = d
     session['n'] = n
     session['e'] = e
     return [n, e, d]
+
+def gcd(a,b): # get gcd for rsa
+    """Takes two integers and returns gcd."""
+    while b > 0:
+        a, b = b, a % b
+    return a
 
 def get_e(mod): # get e for rsa
     """Finds an e coprime with m."""
@@ -253,21 +255,15 @@ def get_e(mod): # get e for rsa
         e += 1
     return e
 
-def gcd(a,b): # get gcd for rsa
-    """Takes two integers and returns gcd."""
-    while b > 0:
-        a, b = b, a % b
-    return a
-
-def get_d(e, m):# get d for rsa
+def get_d(e, m):# get d for rsa(back substitution)
     """Takes encoding number, 'e' and the value for 'mod' (p-1) * (q-1).
     Returns a decoding number."""
     x = lasty = 0 
     lastx = y = 1
     while m != 0: 
         q = e // m 
-        e, m = m, e % m 
-        x, lastx = lastx - q*x, x
+        e, m = m, e % m #gcd = e
+        x, lastx = lastx - q*x, x #iterations
         y, lasty = lasty - q*y, y
     return lastx
 
