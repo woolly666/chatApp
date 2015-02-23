@@ -44,8 +44,9 @@ def getcomment2():# enter private key
 @app.route('/login')
 def getLogin(): # display login page
     return render_template("login.html",
-                            the_title="Login",
-                            register_link=url_for("getRegister"))
+                           the_title="Login",
+                           register_link=url_for("getRegister"),
+                           login_url = url_for("loginCheck"))
 
 @app.route('/register')
 def getRegister(): # display register page
@@ -124,6 +125,86 @@ def emailExist():
 
 ######################################################################################################################
 
+################ CHECK LOGIN CREDENTIALS #########################################################################################################################################
+
+
+@app.route('/loginChecker', methods = ["POST"])
+def loginCheck():
+    passList = []
+    loginSuccess=False
+    loginDetailsList = []
+    session['username'] = request.form["user_name"]
+    session['pass'] = str(request.form["password"])
+    
+    
+    print("\n\n\nLOGIN USERNAME --> ",session.get("username"))
+    print("\nLOGIN PASSWORD --> ",session.get("pass"))
+
+    
+    connection = mariadb.connect(host="localhost",
+                                 user="root",
+                                 password="Jamesh92",
+                                 database="chatapp")
+
+    getPass = """SELECT userEmail, userPass FROM chatusers""" 
+    
+    cursor = connection.cursor()
+    
+    cursor.execute(getPass)
+    passList =cursor.fetchall()
+    
+    connection.commit()
+    connection.close()
+
+    loginDetailsList = session.get("username"),session.get("pass")
+
+    
+
+    print('LOGIN USER -> ',request.form['user_name'],' LOGIN PASS -> ',request.form['password'])
+
+    print("\n\n\n\nDATABASE PASSWORD ->",passList,"\n\n\n\n")
+    print("\n\n\n\nDATABASE PASSWORD [0] ->",passList[0],"\n\n\n\n")
+    print('LOGIN DETAILS LIST -> ', loginDetailsList)
+
+    #checks if the username and password match
+    for item in passList:
+        print("----IN FOR----")
+        if loginDetailsList == item:
+            print("SUCCESS!!!!!!!")
+            loginSuccess = True
+            loginName = request.form['user_name']
+
+            connection = mariadb.connect(host="localhost",
+                                 user="root",
+                                 password="Jamesh92",
+                                 database="chatapp")
+ 
+            getId = "SELECT userId FROM chatusers WHERE userEmail= %s"
+            
+            cursor = connection.cursor()
+            
+            cursor.execute(getId,(loginName,))
+            session['userId'] = cursor.fetchall()
+            
+            connection.commit()
+            connection.close()
+            
+
+            
+################ LOGIN SUCCESS ######################################################################################################################################
+
+    if loginSuccess == True:
+        print("*********************** TRUE *****************************")
+
+        return redirect("/home")
+
+################ LOGIN FAIL #########################################################################################################################################
+
+    else:
+        print("========================= FALSE ===============================")
+        return redirect("/login" )  
+    
+#####################################################################################################################################################################
 
 @app.route('/saveform', methods=["POST"])
 def saveformdata(): # save for rsa
