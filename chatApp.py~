@@ -279,6 +279,7 @@ def saveformdata2(): # save for private key
 def showallcomments(): # show for rsa
     decryptList.clear()
     try:
+        set_keys(int(request.form['P']),int(request.form['Q']))#set key
         session['encryptDecryptList'] = pickle.load(open(request.form['store_name'] + ".txt","wb"))
 
     except Exception:
