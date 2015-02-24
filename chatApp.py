@@ -4,6 +4,7 @@ import math, random
 import subprocess
 import tempfile
 import os
+import mysql.connector as mariadb
 
 app=Flask(__name__)
 
@@ -46,7 +47,7 @@ def getLogin(): # display login page
     return render_template("login.html",
                            the_title="Login",
                            register_link=url_for("getRegister"),
-                           login_url = url_for("loginCheck"))
+                           login_url = url_for("loginCheck"),)
 
 @app.route('/register')
 def getRegister(): # display register page
@@ -202,7 +203,8 @@ def loginCheck():
 
     else:
         print("========================= FALSE ===============================")
-        return redirect("/login" )  
+        return render_template("loginFail.html",
+                               the_title = "Welcome to the login Page!", )
     
 #####################################################################################################################################################################
 

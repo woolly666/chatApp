@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block the_body %}
 
+<script>
+http://stackoverflow.com/questions/4842590/run-function-when-page-is-loaded
+	function invalidEmailOrPass() {
+		alert('Email or Password is Incorrect!!!');
+    
+    }
+window.onload = invalidEmailOrPass;
+</script>
 
 <form action="{{login_url}}" method="POST">
     <p>Email:
