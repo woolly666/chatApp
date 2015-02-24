@@ -398,5 +398,5 @@ def decrypt2(k): # private decryption
                count = 0
             decryptList.append(chr(r))
 
-app.config['SECRET_KEY'] = 'thisismysecretkeyyouarescrewedmehhehehe' # encrypts/decrypts the session
+app.config['SECRET_KEY'] = 'thisismysecretkeyyouarenevergoingtoguessit' # encrypts/decrypts the session
 app.run(debug=True)
