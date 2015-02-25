@@ -204,7 +204,8 @@ def loginCheck():
     else:
         print("========================= FALSE ===============================")
         return render_template("loginFail.html",
-                               the_title = "Welcome to the login Page!", )
+                               the_title = "Welcome to the login Page!",
+                               register_link=url_for("getRegister"),)
     
 #####################################################################################################################################################################
 
