@@ -20,7 +20,7 @@ d = 0
 @app.route('/home')
 def display_home(): # home page
     return render_template("home.html",
-                            the_title="Welcome to the Commenting System.",
+                            the_title="Welcome to the Chat System.",
                             login_url=url_for("getLogin"),
                             comment_url=url_for("getcomment"),
                             comment_url2=url_for("getcomment2"),
@@ -52,34 +52,37 @@ def getLogin(): # display login page
 @app.route('/register')
 def getRegister(): # display register page
     return render_template("register.html",
-                            the_title="Register for an account")
+                           the_title="Register for an account",
+                           register_url = url_for("emailExist"),
+                           login_link = url_for("getLogin"))
+                           
 
 
-@app.route('/email checker', methods = ["POST"])
+@app.route('/emailChecker', methods = ["POST"])
 def emailExist():
     emailList = []
     exists=False
     
-    session['firstName'] = request.form["FirstName"]
-    session['lastName'] = request.form["LastName"]
-    session['userEmail'] = str(request.form["userEmail"])
-    session['pass'] = str(request.form["password"])
-    session['phone'] = str(request.form["phone"])
+    checkEmail = request.form['emailAddress']
 
-    #connection = mariadb.connect(host="localhost",
-    #                             user="root",
-    #                             password="Jamesh92",
-    #                             database="TakeMeThere")
 
-    #getEmail = """SELECT email FROM users""" 
+########### DATABASE NOT INCLUDED########################
     
-   # cursor = connection.cursor()
+    connection = mariadb.connect(host="localhost",
+                                 user="root",
+                                 password="Jamesh92",
+                                 database="chatApp")
+
+    getEmail = """SELECT userEmail FROM chatusers""" 
+    cursor = connection.cursor()
     
-    #cursor.execute(getEmail)
-   # emailList =cursor.fetchall()
     
-    #connection.commit()
-   # connection.close()
+    cursor.execute(getEmail)
+    emailList =cursor.fetchall()
+
+    connection.commit()
+    connection.close()
+
 
     
 
@@ -97,21 +100,26 @@ def emailExist():
         print("*********************** FALSE *****************************")
         print("THANKS PAGE ",session.get('firstName'))
 
-       # connection = mariadb.connect(host="localhost",
-        #                         user="root",
-         #                        password="Jamesh92",
-          #                       database="TakeMeThere")
+        registeringData = """INSERT INTO chatusers (firstName, lastName, DOB, gender, userEmail, userPass) VALUES(%s, %s, %s, %s, %s, %s)""" #puts the new registered users into the database
+
+
+        connection = mariadb.connect(host="localhost",
+                                     user="root",
+                                     password="Jamesh92",
+                                     database="chatApp")
+
+        
+        cursor = connection.cursor()
     
-        #cursor = connection.cursor()
+        cursor.execute(registeringData, (request.form['firstName'],request.form['surname'],request.form['age'],request.form['gender'],request.form['emailAddress'],request.form['password'],))
+      
     
-        #cursor.execute(registeringData, (session.get('firstName'),session.get('lastName'),session.get('userEmail'),session.get('pass'),session.get('phone'),))
-        #cursor.execute(registerLoc)
-    
-        #connection.commit()
-        #connection.close()
+        connection.commit()
+        connection.close()
 
         return render_template("thanks.html",
-                           the_title = "Thank You For Registering!", )
+                               the_title = "Thank You For Registering!",
+                               home_link = url_for("display_home"))
 
 ################ EMAIL EXISTS ######################################################################################################################
 
@@ -119,7 +127,8 @@ def emailExist():
         print("========================= TRUE ===============================")
        # flash("Sorry This Email Address Already Exists!!!!")
         return render_template("registerFail.html",
-                               the_title = "Welcome to the Registration Page!", )
+                               the_title = "Welcome to the Registration Page!",
+                               login_link = url_for("getLogin"))
 
 
 
@@ -174,6 +183,9 @@ def loginCheck():
             print("SUCCESS!!!!!!!")
             loginSuccess = True
             loginName = request.form['user_name']
+
+
+########### DATABASE NOT INCLUDED########################
 
             connection = mariadb.connect(host="localhost",
                                  user="root",
