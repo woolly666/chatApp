@@ -300,7 +300,7 @@ def showallcomments(): # show for rsa
     decrypt(session['d'], session['n']) # decrypt file
 
     return render_template("show.html",
-                            the_title="Here are the current comments",
+                            the_title="Here are the current scores",
                             the_data=decryptList,
                             comment_url=url_for("getcomment"))
 
@@ -316,7 +316,7 @@ def showallcomments2(): # show for private key
     decrypt2(session['key'])# decrypt file
 
     return render_template("show2.html",
-                            the_title="Here are the current comments",
+                            the_title="Here are the current scores",
                             the_data=decryptList,
                             comment_url=url_for("getcomment2"))
 
